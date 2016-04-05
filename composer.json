@@ -1,0 +1,27 @@
+{
+    "name": "prewk/record",
+    "description": "Immutable validatable record",
+    "homepage": "http://github.com/prewk/record",
+    "support": {
+      "issues": "http://github.com/prewk/record/issues",
+      "source": "http://github.com/prewk/record"
+    },
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Oskar Thornblad",
+        "email": "oskar.thornblad@gmail.com"
+      }
+    ],
+    "require": {
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prewk\\": "src/"
+        }
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "0.6.*"
+    }
+}
