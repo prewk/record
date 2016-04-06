@@ -51,12 +51,9 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function offsetExists($offset)
     {
-        if (array_key_exists($offset, $this->getDefaults())) {
-            return true;
-        } elseif (array_key_exists($offset, $this->_recordData)) {
-            return true;
-        }
-        return false;
+        return
+            array_key_exists($offset, $this->getDefaults()) ||
+            array_key_exists($offset, $this->_recordData);
     }
 
     /**
@@ -203,12 +200,9 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function has($name)
     {
-        if (array_key_exists($name, $this->getDefaults())) {
-            return true;
-        } elseif (array_key_exists($name, $this->_recordData)) {
-            return true;
-        }
-        return false;
+        return
+            array_key_exists($name, $this->getDefaults()) ||
+            array_key_exists($name, $this->_recordData);
     }
 
     /**
