@@ -13,16 +13,28 @@ use TestCase;
 
 class TestRecord extends Record
 {
+    /**
+     * Get fields
+     * @return array
+     */
     protected function getFields()
     {
         return ["foo", "bar", "baz"];
     }
 
+    /**
+     * Get defaults
+     * @return array
+     */
     protected function getDefaults()
     {
         return ["foo" => 123, "bar" => null, "baz" => 456];
     }
 
+    /**
+     * Get rules
+     * @return array
+     */
     protected function getRules()
     {
         return ["foo" => "rule1", "bar" => "rule2", "baz" => "rule3"];
