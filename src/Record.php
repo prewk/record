@@ -51,7 +51,12 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->_recordData);
+        if (array_key_exists($offset, $this->getDefaults())) {
+            return true;
+        } elseif (array_key_exists($offset, $this->_recordData)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -70,27 +75,22 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      *
      * @param mixed $offset
      * @param mixed $value
+     * @throws Exception when you try to set
      */
     public function offsetSet($offset, $value)
     {
-        $this->set($offset, $value);
+        throw new Exception("You can't set on an immutable record as an array");
     }
 
     /**
      * Array unset key
      *
      * @param mixed $offset
-     * @throws Exception
+     * @throws Exception when you try to unset
      */
     public function offsetUnset($offset)
     {
-        if (array_key_exists($offset, $this->getDefaults())) {
-            if (array_key_exists($offset, $this->_recordData)) {
-                unset($this->_recordData[$offset]);
-            }
-        } else {
-            throw new Exception("That key can't be unset due to no default fallback being available");
-        }
+        throw new Exception("You can't unset an immutable record");
     }
 
     /**
@@ -104,6 +104,7 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      * Should return an associative array of validator rules, if a field is
      * omitted, that field will not be validated when set
      *
+     * @codeCoverageIgnore
      * @return array
      */
     protected function getRules()
@@ -115,6 +116,7 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      * Should return an associative array of record defaults, if a field is
      * omitted an exception will be thrown when accessing it before setting it
      *
+     * @codeCoverageIgnore
      * @return array Defaults
      */
     protected function getDefaults()

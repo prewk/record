@@ -11,7 +11,7 @@ use PHPUnit_Framework_TestCase;
 use Prewk\Record\ValidatorInterface;
 use TestCase;
 
-class TestRecord extends Record
+class TestWithDefaultsRecord extends Record
 {
     /**
      * Get fields
@@ -38,6 +38,18 @@ class TestRecord extends Record
     protected function getRules()
     {
         return ["foo" => "rule1", "bar" => "rule2", "baz" => "rule3"];
+    }
+}
+
+class TestWithoutDefaultsRecord extends Record
+{
+    /**
+     * Get fields
+     * @return array
+     */
+    protected function getFields()
+    {
+        return ["foo", "bar", "baz"];
     }
 }
 
@@ -74,9 +86,9 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->validator = new MockValidator();
     }
 
-    public function test_that_the_record_is_immutable()
+    public function test_that_the_record_sets_returns_new_records()
     {
-        $record1 = new TestRecord();
+        $record1 = new TestWithDefaultsRecord;
 
         $record2 = $record1->set("foo", "Foo");
 
@@ -84,9 +96,26 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Foo", $record2->foo);
     }
 
+    /**
+     * @expectedException \Exception
+     */
+    public function test_that_the_record_doesnt_magically_set()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        $record->foo = "Foo";
+    }
+
+    public function test_that_has_works_on_an_unset_non_default_field()
+    {
+        $record = new TestWithoutDefaultsRecord;
+
+        $this->assertFalse($record->has("foo"));
+    }
+
     public function test_that_the_record_defaults_correctly()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $record = $record->set("foo", "Foo");
 
@@ -97,7 +126,7 @@ class RecordTest extends PHPUnit_Framework_TestCase
 
     public function test_that_the_non_magic_set_get_works_correctly()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $record = $record
             ->set("foo", "Foo")
@@ -109,9 +138,33 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Baz", $record->get("baz"));
     }
 
+    /**
+     * @expectedException \Exception
+     */
+    public function test_that_getting_a_non_defaulted_field_without_a_value_throws()
+    {
+        $record = new TestWithoutDefaultsRecord;
+
+        $record->get("foo");
+    }
+
+    public function test_that_equals_works()
+    {
+        $withDefaults = new TestWithDefaultsRecord;
+        $withoutDefaults = new TestWithoutDefaultsRecord;
+
+        $record = $withoutDefaults->make([
+            "foo" => 123,
+            "bar" => null,
+            "baz" => 456,
+        ]);
+
+        $this->assertTrue($withDefaults->equals($record));
+    }
+
     public function test_that_it_merges_with_an_array()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $record = $record->merge([
             "foo" => "Foo",
@@ -125,7 +178,7 @@ class RecordTest extends PHPUnit_Framework_TestCase
 
     public function test_that_it_merges_with_another_record()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $mergee = $record->make([
             "foo" => "Foo",
@@ -144,7 +197,7 @@ class RecordTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_getting_invalid_field_names_throws_exception()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $record->get("qux");
     }
@@ -154,14 +207,14 @@ class RecordTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_setting_invalid_fields_throws_exception()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $record->set("qux", "Qux");
     }
 
     public function test_valid_setting_with_rules()
     {
-        $record = new TestRecord($this->validator);
+        $record = new TestWithDefaultsRecord($this->validator);
         $this->validator->setAnswer(true);
 
         $record = $record->set("foo", 789);
@@ -174,7 +227,7 @@ class RecordTest extends PHPUnit_Framework_TestCase
      */
     public function test_invalid_setting_with_rules()
     {
-        $record = new TestRecord($this->validator);
+        $record = new TestWithDefaultsRecord($this->validator);
         $this->validator->setAnswer(false);
 
         $record->set("foo", 789);
@@ -183,7 +236,7 @@ class RecordTest extends PHPUnit_Framework_TestCase
 
     public function test_arrayable_interface()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $array = $record->set("foo", "Foo")->toArray();
 
@@ -194,15 +247,25 @@ class RecordTest extends PHPUnit_Framework_TestCase
 
     public function test_recursive_arrayable_interface()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
         $array = $record->set("foo", $record)->toArray();
 
         $this->assertEquals($record->toArray(), $array["foo"]);
     }
 
+    /**
+     * @expectedException \Exception
+     */
+    public function test_that_it_doesnt_unset()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        unset($record["foo"]);
+    }
+
     public function test_jsonable_interface()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $json = json_encode($record);
         $obj = json_decode($json);
@@ -212,12 +275,31 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(456, $obj->baz);
     }
 
-    public function test_array_access_interface()
+    public function test_array_access_interface_get()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $this->assertEquals(123, $record->foo);
         $this->assertEquals(123, $record["foo"]);
+    }
+    public function test_array_access_interface_isset()
+    {
+        $withDefaults = new TestWithDefaultsRecord;
+        $withoutDefaults  = new TestWithoutDefaultsRecord;
+
+        $this->assertTrue(isset($withDefaults["foo"]));
+        $this->assertFalse(isset($withDefaults["qux"]));
+        $this->assertFalse(isset($withoutDefaults["foo"]));
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function test_that_array_access_interface_set_throws()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        $record["foo"] = 123;
     }
 
     /**
@@ -225,13 +307,13 @@ class RecordTest extends PHPUnit_Framework_TestCase
      */
     public function test_that_array_access_interface_throws_exception()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
         $test = $record["qux"];
     }
 
     public function test_iterator_interface()
     {
-        $record = new TestRecord();
+        $record = new TestWithDefaultsRecord;
 
         $this->assertEquals(3, count($record));
         $keys = [];
