@@ -165,7 +165,7 @@ $record->make(["foo" => "bar"]);
 // Make a new record from setting
 $newRecord = $record->set("foo", "bar");
 
-// Check if a field has a value (if value has a default value this returns true)
+// Check if a field has a value (if field has a default value this returns true)
 $fooIsSet = $record->has("foo");
 
 // Merge with an array
