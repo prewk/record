@@ -176,3 +176,4 @@ $newRecord = $record->merge($record2);
 # License
 
 MIT
+
