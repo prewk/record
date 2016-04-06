@@ -2,16 +2,19 @@
     "name": "prewk/record",
     "description": "Immutable validatable record",
     "homepage": "http://github.com/prewk/record",
+    "type": "library",
+    "keywords": ["immutable", "record"],
     "support": {
-      "issues": "http://github.com/prewk/record/issues",
-      "source": "http://github.com/prewk/record"
+        "issues": "http://github.com/prewk/record/issues",
+        "source": "http://github.com/prewk/record"
     },
     "license": "MIT",
     "authors": [
-      {
-        "name": "Oskar Thornblad",
-        "email": "oskar.thornblad@gmail.com"
-      }
+        {
+            "name": "Oskar Thornblad",
+            "email": "oskar.thornblad@gmail.com",
+            "homepage": "https://www.oskarthornblad.se",
+        }
     ],
     "require": {
         "php": ">=5.5"
