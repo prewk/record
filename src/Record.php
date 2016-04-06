@@ -194,6 +194,22 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
     }
 
     /**
+     * Does the record have a set value for the given field?
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        if (array_key_exists($name, $this->getDefaults())) {
+            return true;
+        } elseif (array_key_exists($name, $this->_recordData)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Magic getter, throws an exception if the field name is invalid, or is unset without defaults
      *
      * @param $name
@@ -230,6 +246,27 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
         }
 
         $record->force($init);
+
+        return $record;
+    }
+
+    /**
+     * Merge the record with another structure
+     *
+     * @param mixed $mergee
+     * @return static
+     * @throws Exception
+     */
+    public function merge($mergee) {
+        $data = $this->_recordData;
+        $record = new static($this->_validator);
+
+        foreach ($mergee as $key => $value) {
+            $record->validate($key, $value);
+            $data[$key] = $value;
+        }
+
+        $record->force($data);
 
         return $record;
     }
@@ -290,9 +327,7 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function current()
     {
-        $field = $this->getFields()[$this->_recordIteratorIndex];
-
-        return $this->get($field);
+        return $this->get($this->key());
     }
 
     /**
@@ -302,7 +337,7 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function key()
     {
-        return $this->_recordIteratorIndex;
+        return $this->getFields()[$this->_recordIteratorIndex];
     }
 
     /**
@@ -320,9 +355,11 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function valid()
     {
-        $field = $this->getFields()[$this->_recordIteratorIndex];
-
-        return array_key_exists($field, $this->_recordData);
+        if (count($this) <= $this->_recordIteratorIndex) {
+            return false;
+        } else {
+            return $this->has($this->key());
+        }
     }
 
     /**
@@ -332,6 +369,8 @@ abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Counta
      */
     public function count()
     {
-        return count($this->getFields());
+        return array_reduce($this->getFields(), function($carry, $field) {
+            return $this->has($field) ? $carry + 1 : $carry;
+        }, 0);
     }
 }

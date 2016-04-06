@@ -109,6 +109,36 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Baz", $record->get("baz"));
     }
 
+    public function test_that_it_merges_with_an_array()
+    {
+        $record = new TestRecord();
+
+        $record = $record->merge([
+            "foo" => "Foo",
+            "bar" => "Bar",
+        ]);
+
+        $this->assertEquals("Foo", $record->get("foo"));
+        $this->assertEquals("Bar", $record->get("bar"));
+        $this->assertEquals(456, $record->get("baz"));
+    }
+
+    public function test_that_it_merges_with_another_record()
+    {
+        $record = new TestRecord();
+
+        $mergee = $record->make([
+            "foo" => "Foo",
+            "bar" => "Bar",
+        ]);
+
+        $record = $record->merge($mergee);
+
+        $this->assertEquals("Foo", $record->get("foo"));
+        $this->assertEquals("Bar", $record->get("bar"));
+        $this->assertEquals(456, $record->get("baz"));
+    }
+
     /**
      * @expectedException \Exception
      */
@@ -204,7 +234,11 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $record = new TestRecord();
 
         $this->assertEquals(3, count($record));
+        $keys = [];
+        $values = [];
         foreach ($record as $key => $value) {
+            $keys[] = $key;
+            $values[] = $value;
             if ($key === "foo") {
                 $this->assertEquals(123, $value);
             } elseif ($key === "bar") {
@@ -213,5 +247,8 @@ class RecordTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(456, $value);
             }
         }
+
+        $this->assertEquals(["foo", "bar", "baz"], $keys);
+        $this->assertEquals([123, null, 456], $values);
     }
 }
