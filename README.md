@@ -1,10 +1,18 @@
 # Immutable Validatable Record
 
+Validatable records with an API inspired by [Immutable Record](http://facebook.github.io/immutable-js/docs/#/Record) (but without the memory efficiency..)
+
 ## Installation
 
 `composer require prewk/record`
 
 ## Simple usage
+
+1. Extend `\Prewk\Record`
+2. Define fields by implementing `getFields()`
+3. Define (optional) defaults by implementing `getDefaults()`
+4. Construct a base record
+5. Create new records from that base record
 
 ````php
 <?php
@@ -49,6 +57,10 @@ print_r($record2->asArray());
 ````
 
 ## Validation
+
+1. Implement a validator class that extends `\Prewk\Record\ValidatorInterface`
+2. Define rules on your record by implementing `getRules()`
+3. Every mutation on your record will be routed through your validator
 
 ````php
 class MyValidator implements \Prewk\Record\ValidatorInterface
@@ -141,6 +153,24 @@ class FooController extends BaseController
         $record = $this->fooRecord->make($request->all());
     }
 }
+````
+
+# API
+
+````php
+// Make a new record from an existing record
+$record->make(["foo" => "bar"]);
+
+// Make a new record from setting
+$newRecord = $record->set("foo", "bar");
+
+// Check if a field has a value (if value has a default value this returns true)
+$fooIsSet = $record->has("foo");
+
+// Merge with an array
+$newRecord = $record->merge(["baz" => "qux"]);
+// ..or with an existing record
+$newRecord = $record->merge($record2);
 ````
 
 # License
