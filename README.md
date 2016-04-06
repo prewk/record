@@ -127,19 +127,6 @@ class FooRecord extends \Prewk\Record\Laravel\Record
     }
 }
 
-class FooRecordServiceProvider extends Illuminate\Support\ServiceProvider
-{
-	public function register()
-	{
-		$this->app->bind(FooRecord::class, function() {
-			return new FooRecord(
-					$this->app->make(\Prewk\Record\Laravel\ValidatorWrapper)
-				)
-			);
-		});
-	}
-}
-
 class FooController extends BaseController
 {
 	private $fooRecord;

@@ -14,4 +14,9 @@ use Illuminate\Contracts\Support\Arrayable;
  * Laravel-arrayable record
  */
 abstract class Record extends BaseRecord implements Arrayable
-{}
+{
+    public function __construct(ValidatorWrapper $validator)
+    {
+        parent::__construct($validator);
+    }
+}
