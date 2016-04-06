@@ -61,12 +61,12 @@ class MyValidator implements \Prewk\Record\ValidatorInterface
      */
     public function validate($value, $rule)
     {
-    	switch ($rule) {
-    		case "numeric":
-    			return is_numeric($value);
-			default:
-				throw new \Exception("Invalid rule!");
-    	}
+        switch ($rule) {
+            case "numeric":
+                return is_numeric($value);
+            default:
+                throw new \Exception("Invalid rule!");
+        }
     }
     
 class FooRecord extends \Prewk\Record
@@ -95,7 +95,7 @@ class FooRecord extends \Prewk\Record
      */
     protected function getRules()
     {
-    	return ["foo" => "numeric"];
+        return ["foo" => "numeric"];
     }
 }
 
@@ -123,36 +123,33 @@ class FooRecord extends \Prewk\Record\Laravel\Record
     
     protected function getRules()
     {
-    	return ["foo" => "in:1,2,3", "bar" => "numeric"];
+        return ["foo" => "in:1,2,3", "bar" => "numeric"];
     }
 }
 
 class FooRecordServiceProvider extends Illuminate\Support\ServiceProvider
 {
-	public function register()
-	{
-		$this->app->bind(FooRecord::class, function() {
-			return new FooRecord(
-					$this->app->make(\Prewk\Record\Laravel\ValidatorWrapper)
-				)
-			);
-		});
-	}
+    public function register()
+    {
+        $this->app->bind(FooRecord::class, function() {
+            return new FooRecord($this->app->make(\Prewk\Record\Laravel\ValidatorWrapper));
+        });
+    }
 }
 
 class FooController extends BaseController
 {
-	private $fooRecord;
-	
-	public function __construct(FooRecord $fooRecord)
-	{
-		$this->fooRecord = $fooRecord;
-	}
-	
-	public function create(FooRequest $request)
-	{
-		$record = $this->fooRecord->make($request->all());
-	}
+    private $fooRecord;
+    
+    public function __construct(FooRecord $fooRecord)
+    {
+        $this->fooRecord = $fooRecord;
+    }
+    
+    public function create(FooRequest $request)
+    {
+        $record = $this->fooRecord->make($request->all());
+    }
 }
 ````
 
