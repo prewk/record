@@ -110,7 +110,7 @@ $record2 = $fooRecord->make(["foo" => "Will throw exception"]);
 
 ````
 
-## Laravel related
+## Injectable Laravel validated record
 
 ````php
 <?php
