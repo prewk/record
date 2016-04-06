@@ -123,7 +123,7 @@ class FooRecord extends \Prewk\Record\Laravel\Record
     
     protected function getRules()
     {
-    	return ["foo" => "in:1,2,3", "bar" => "numeric];
+    	return ["foo" => "in:1,2,3", "bar" => "numeric"];
     }
 }
 
