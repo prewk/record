@@ -11,6 +11,14 @@
          syntaxCheck="false"
          bootstrap="./vendor/autoload.php"
         >
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory suffix=".php">./src/Laravel</directory>
+            </exclude>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="Immutable validatable record test suite">
             <directory suffix="Test.php">./tests/</directory>
