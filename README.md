@@ -1,4 +1,5 @@
-# Immutable Validatable Record
+# Immutable Validatable Record [![Build Status](https://travis-ci.org/prewk/record.svg)](https://travis-ci.org/prewk/record) [![Coverage Status](https://coveralls.io/repos/prewk/record/badge.svg?branch=master&service=github)](https://coveralls.io/github/prewk/record?branch=master)
+
 
 Validatable records with an API inspired by [Immutable Record](http://facebook.github.io/immutable-js/docs/#/Record) (but without the memory efficiency..)
 
