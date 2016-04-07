@@ -6,18 +6,15 @@
  */
 
 namespace Prewk;
-use ArrayAccess;
-use Countable;
+
 use Exception;
-use Iterator;
-use JsonSerializable;
 use Prewk\Record\ValidatorInterface;
 
 /**
  * Class Record
  * @package PagePicnic\Services\Records
  */
-abstract class Record implements JsonSerializable, ArrayAccess, Iterator, Countable
+abstract class Record implements RecordInterface
 {
     /**
      * @var array
