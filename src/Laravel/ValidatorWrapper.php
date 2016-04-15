@@ -36,7 +36,7 @@ class ValidatorWrapper implements ValidatorInterface
      */
     public function validate($value, $rule)
     {
-        return !$this->validate()->make(
+        return !$this->validator->make(
             ["validatee" => $value],
             ["validatee" => $rule]
         )->fails();
