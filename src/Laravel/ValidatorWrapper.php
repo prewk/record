@@ -8,21 +8,21 @@
 namespace Prewk\Laravel;
 
 use Prewk\Record\ValidatorInterface;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Factory;
 
 class ValidatorWrapper implements ValidatorInterface
 {
     /**
-     * @var Validator
+     * @var Factory
      */
     private $validator;
 
     /**
      * ValidatorWrapper constructor
      *
-     * @param Validator $validator
+     * @param Factory $validator
      */
-    public function __construct(Validator $validator)
+    public function __construct(Factory $validator)
     {
         $this->validator = $validator;
     }
