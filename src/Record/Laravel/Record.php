@@ -5,7 +5,7 @@
  * @author Oskar Thornblad
  */
 
-namespace Prewk\Laravel;
+namespace Prewk\Record\Laravel;
 
 use Prewk\Record as BaseRecord;
 use Illuminate\Contracts\Support\Arrayable;

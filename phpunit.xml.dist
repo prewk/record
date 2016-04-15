@@ -15,7 +15,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./src/Laravel</directory>
+                <directory suffix=".php">./src/Record/Laravel</directory>
             </exclude>
         </whitelist>
     </filter>

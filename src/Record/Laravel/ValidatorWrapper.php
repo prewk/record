@@ -5,7 +5,7 @@
  * @author Oskar Thornblad
  */
 
-namespace Prewk\Laravel;
+namespace Prewk\Record\Laravel;
 
 use Prewk\Record\ValidatorInterface;
 use Illuminate\Validation\Factory;
