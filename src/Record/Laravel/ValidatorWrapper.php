@@ -41,4 +41,20 @@ class ValidatorWrapper implements ValidatorInterface
             ["validatee" => $rule]
         )->fails();
     }
+
+    /**
+     * Don't serialize the validator
+     */
+    public function __sleep()
+    {
+        return [];
+    }
+
+    /**
+     * When deserializing - re-create the validator with the IoC container
+     */
+    public function __wakeup()
+    {
+        $this->validator = app(Factory::class);
+    }
 }
