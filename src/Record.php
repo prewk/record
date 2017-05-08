@@ -252,11 +252,14 @@ abstract class Record implements RecordInterface
      */
     public function merge($mergee) {
         $data = $this->_recordData;
+        $fields = $this->getFields();
         $record = new static($this->_validator);
 
         foreach ($mergee as $key => $value) {
-            $record->validate($key, $value);
-            $data[$key] = $value;
+            if (in_array($key, $fields)) {
+                $record->validate($key, $value);
+                $data[$key] = $value;
+            }
         }
 
         $record->force($data);

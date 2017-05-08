@@ -176,6 +176,21 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(456, $record->get("baz"));
     }
 
+    public function test_that_merging_filters_invalid_keys()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        $record = $record->merge([
+            "foo" => "Foo",
+            "bar" => "Bar",
+            "qux" => "IGNORE",
+        ]);
+
+        $this->assertEquals("Foo", $record->get("foo"));
+        $this->assertEquals("Bar", $record->get("bar"));
+        $this->assertEquals(456, $record->get("baz"));
+    }
+
     public function test_that_it_merges_with_another_record()
     {
         $record = new TestWithDefaultsRecord;
