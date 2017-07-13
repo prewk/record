@@ -44,10 +44,10 @@ interface RecordInterface extends JsonSerializable, ArrayAccess, Iterator, Count
     /**
      * Returns a new record
      *
-     * @param array $init Initial record data
+     * @param array|ArrayAccess $init Initial record data
      * @return static
      */
-    public function make(array $init = []);
+    public function make($init = []);
 
     /**
      * Merge the record with another structure

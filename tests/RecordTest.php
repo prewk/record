@@ -9,6 +9,7 @@ namespace Prewk;
 
 use PHPUnit_Framework_TestCase;
 use Prewk\Record\ValidatorInterface;
+use stdClass;
 use TestCase;
 
 class TestWithDefaultsRecord extends Record
@@ -146,6 +147,21 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $record = new TestWithoutDefaultsRecord;
 
         $record->get("foo");
+    }
+
+    public function test_that_it_makes_with_a_stdClass()
+    {
+        $withoutDefaults = new TestWithoutDefaultsRecord;
+        $obj = new stdClass;
+        $obj->foo = 123;
+        $obj->bar = null;
+        $obj->baz = 456;
+
+        $record = $withoutDefaults->make($obj);
+
+        $this->assertEquals(123, $record->get("foo"));
+        $this->assertEquals(null, $record->get("bar"));
+        $this->assertEquals(456, $record->get("baz"));
     }
 
     public function test_that_equals_works()

@@ -7,6 +7,7 @@
 
 namespace Prewk;
 
+use ArrayAccess;
 use Exception;
 use Prewk\Record\ValidatorInterface;
 
@@ -171,11 +172,11 @@ abstract class Record implements RecordInterface
     /**
      * Force set record data without validation
      * 
-     * @param array $recordData
+     * @param array|ArrayAccess $recordData
      */
-    public function force(array $recordData)
+    public function force($recordData)
     {
-        $this->_recordData = $recordData;
+        $this->_recordData = (array)$recordData;
     }
 
     /**
@@ -228,10 +229,10 @@ abstract class Record implements RecordInterface
     /**
      * Returns a new record
      *
-     * @param array $init Initial record data
+     * @param array|ArrayAccess $init Initial record data
      * @return static
      */
-    public function make(array $init = []) {
+    public function make($init = []) {
         $record = new static($this->_validator);
         
         foreach ($init as $key => $value) {
