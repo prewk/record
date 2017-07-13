@@ -289,7 +289,7 @@ abstract class Record implements RecordInterface
         return array_reduce($this->getFields(), function($carry, $current) {
             $value = $this->get($current);
 
-            if (method_exists($value, "toArray")) {
+            if (!is_string($value) && method_exists($value, "toArray")) {
                 $carry[$current] = $value->toArray();
             } else {
                 $carry[$current] = $value;
