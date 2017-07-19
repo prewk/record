@@ -62,14 +62,14 @@ class MockValidator implements ValidatorInterface
 {
     public $answer = true;
     public $validated = [];
-    
+
     public function validate($value, $rule)
     {
         $this->validated[] = [$value, $rule];
 
         return $this->answer;
     }
-    
+
     public function setAnswer($answer)
     {
         $this->answer = $answer;
@@ -79,11 +79,11 @@ class MockValidator implements ValidatorInterface
 class RecordTest extends PHPUnit_Framework_TestCase
 {
     private $validator;
-    
+
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->validator = new MockValidator();
     }
 
@@ -95,6 +95,28 @@ class RecordTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(123, $record1->foo);
         $this->assertEquals("Foo", $record2->foo);
+    }
+
+    public function test_that_the_record_updates_returns_new_records()
+    {
+        $record1 = new TestWithDefaultsRecord;
+
+        $record2 = $record1->update("foo", function($value) {
+            return $value . "Foo";
+        });
+
+        $this->assertEquals(123, $record1->foo);
+        $this->assertEquals("123Foo", $record2->foo);
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function test_that_updating_unset_required_fields_throws()
+    {
+        $record1 = new TestWithoutDefaultsRecord;
+
+        $record2 = $record1->update("foo", function() {});
     }
 
     /**

@@ -8,6 +8,7 @@
 namespace Prewk;
 
 use ArrayAccess;
+use Closure;
 use Exception;
 use Prewk\Record\ValidatorInterface;
 
@@ -26,7 +27,7 @@ abstract class Record implements RecordInterface
      * @var int
      */
     private $_recordIteratorIndex = 0;
-    
+
     /**
      * @var ValidatorInterface
      */
@@ -148,6 +149,18 @@ abstract class Record implements RecordInterface
     }
 
     /**
+     * Immutable update method
+     *
+     * @param $name Key
+     * @param Closure $updater
+     * @return Record
+     */
+    public function update($name, Closure $updater)
+    {
+        return $this->set($name, $updater($this->get($name)));
+    }
+
+    /**
      * Validate a field
      *
      * @param string $name
@@ -171,7 +184,7 @@ abstract class Record implements RecordInterface
 
     /**
      * Force set record data without validation
-     * 
+     *
      * @param array|ArrayAccess $recordData
      */
     public function force($recordData)
@@ -234,7 +247,7 @@ abstract class Record implements RecordInterface
      */
     public function make($init = []) {
         $record = new static($this->_validator);
-        
+
         foreach ($init as $key => $value) {
             $record->validate($key, $value);
         }
