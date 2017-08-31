@@ -198,6 +198,26 @@ class RecordTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->assertTrue($withDefaults->equals($record));
+
+        $record1 = (new TestWithoutDefaultsRecord)->make([
+            "foo" => [],
+            "bar" => [
+                "lorem" => "ipsum",
+                "dolor" => "amet",
+            ],
+            "baz" => 456,
+        ]);
+
+        $record2 = (new TestWithoutDefaultsRecord)->make([
+            "foo" => [],
+            "bar" => [
+                "dolor" => "amet",
+                "lorem" => "ipsum",
+            ],
+            "baz" => 456,
+        ]);
+
+        $this->assertTrue($record1->equals($record2));
     }
 
     public function test_that_it_merges_with_an_array()

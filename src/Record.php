@@ -289,7 +289,7 @@ abstract class Record implements RecordInterface
      */
     public function equals(Record $comparee)
     {
-        return json_encode($this) === json_encode($comparee);
+        return $this === $comparee || $this->toArray() == $comparee->toArray();
     }
 
     /**
