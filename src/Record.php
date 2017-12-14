@@ -170,13 +170,13 @@ abstract class Record implements RecordInterface
      */
     private function validate($name, $value) {
         if (!in_array($name, $this->getFields())) {
-            throw new Exception("Field name $name invalid for this record");
+            throw new Exception("Field name $name invalid in " . get_class($this));
         } elseif (
             array_key_exists($name, $this->getRules()) &&
             !is_null($this->_validator) &&
             !$this->_validator->validate($value, $this->getRules()[$name])
         ) {
-            throw new Exception("Field name $name didn't validate according to its rules");
+            throw new Exception("Field name $name didn't validate according to its rules in "  . get_class($this));
         }
 
         return $this;
