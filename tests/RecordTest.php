@@ -5,6 +5,8 @@
  * @author Oskar Thornblad
  */
 
+declare(strict_types=1);
+
 namespace Prewk;
 
 use PHPUnit_Framework_TestCase;
@@ -18,7 +20,7 @@ class TestWithDefaultsRecord extends Record
      * Get fields
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         return ["foo", "bar", "baz"];
     }
@@ -27,7 +29,7 @@ class TestWithDefaultsRecord extends Record
      * Get defaults
      * @return array
      */
-    protected function getDefaults()
+    protected function getDefaults(): array
     {
         return ["foo" => 123, "bar" => null, "baz" => 456];
     }
@@ -36,7 +38,7 @@ class TestWithDefaultsRecord extends Record
      * Get rules
      * @return array
      */
-    protected function getRules()
+    protected function getRules(): array
     {
         return ["foo" => "rule1", "bar" => "rule2", "baz" => "rule3"];
     }
@@ -48,7 +50,7 @@ class TestWithoutDefaultsRecord extends Record
      * Get fields
      * @return array
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         return ["foo", "bar", "baz"];
     }
@@ -63,7 +65,7 @@ class MockValidator implements ValidatorInterface
     public $answer = true;
     public $validated = [];
 
-    public function validate($value, $rule)
+    public function validate($value, $rule): bool
     {
         $this->validated[] = [$value, $rule];
 
@@ -211,13 +213,14 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $record2 = (new TestWithoutDefaultsRecord)->make([
             "foo" => [],
             "bar" => [
-                "dolor" => "amet",
                 "lorem" => "ipsum",
+                "dolor" => "amet",
             ],
             "baz" => 456,
         ]);
 
         $this->assertTrue($record1->equals($record2));
+        $this->assertFalse($record1->equals($record2->set("baz", 789)));
     }
 
     public function test_that_it_merges_with_an_array()

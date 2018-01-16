@@ -34,7 +34,7 @@ class ValidatorWrapper implements ValidatorInterface
      * @param mixed $rule
      * @return bool
      */
-    public function validate($value, $rule)
+    public function validate($value, $rule): bool
     {
         return !$this->validator->make(
             ["validatee" => $value],

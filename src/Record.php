@@ -5,6 +5,8 @@
  * @author Oskar Thornblad
  */
 
+declare(strict_types=1);
+
 namespace Prewk;
 
 use ArrayAccess;
@@ -34,7 +36,8 @@ abstract class Record implements RecordInterface
     private $_validator;
 
     /**
-     * Record constructor.
+     * Record constructor
+     *
      * @param ValidatorInterface $validator
      */
     public function __construct(ValidatorInterface $validator = null)
@@ -48,7 +51,7 @@ abstract class Record implements RecordInterface
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return
             array_key_exists($offset, $this->getDefaults()) ||
@@ -92,9 +95,9 @@ abstract class Record implements RecordInterface
     /**
      * Should return an array of record fields names
      *
-     * @return array Fields
+     * @return string[] Fields
      */
-    abstract protected function getFields();
+    abstract protected function getFields(): array;
 
     /**
      * Should return an associative array of validator rules, if a field is
@@ -103,7 +106,7 @@ abstract class Record implements RecordInterface
      * @codeCoverageIgnore
      * @return array
      */
-    protected function getRules()
+    protected function getRules(): array
     {
         return [];
     }
@@ -115,13 +118,14 @@ abstract class Record implements RecordInterface
      * @codeCoverageIgnore
      * @return array Defaults
      */
-    protected function getDefaults()
+    protected function getDefaults(): array
     {
         return [];
     }
 
     /**
      * Disallow sets
+     *
      * @throws Exception if someone sets
      */
     final public function __set($name, $value)
@@ -134,10 +138,10 @@ abstract class Record implements RecordInterface
      *
      * @param string $name Key
      * @param mixed $value Value
-     * @return Record
+     * @return static
      * @throws Exception if field name or value is invalid
      */
-    public function set($name, $value)
+    public function set(string $name, $value): self
     {
         $recordData = $this->validate($name, $value)->_recordData;
 
@@ -151,11 +155,11 @@ abstract class Record implements RecordInterface
     /**
      * Immutable update method
      *
-     * @param $name Key
+     * @param string $name Key
      * @param Closure $updater
-     * @return Record
+     * @return static
      */
-    public function update($name, Closure $updater)
+    public function update(string $name, Closure $updater): self
     {
         return $this->set($name, $updater($this->get($name)));
     }
@@ -165,10 +169,10 @@ abstract class Record implements RecordInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return $this
+     * @return static
      * @throws Exception if the field doesn't validate
      */
-    private function validate($name, $value) {
+    private function validate($name, $value): self {
         if (!in_array($name, $this->getFields())) {
             throw new Exception("Field name $name invalid in " . get_class($this));
         } elseif (
@@ -186,19 +190,22 @@ abstract class Record implements RecordInterface
      * Force set record data without validation
      *
      * @param array|ArrayAccess $recordData
+     * @return $this
      */
-    public function force($recordData)
+    public function force($recordData): self
     {
         $this->_recordData = (array)$recordData;
+
+        return $this;
     }
 
     /**
      * Non-magic getter
      *
-     * @param $name mixed
+     * @param $name string
      * @return mixed
      */
-    public function get($name)
+    public function get(string $name)
     {
         return $this->$name;
     }
@@ -209,7 +216,7 @@ abstract class Record implements RecordInterface
      * @param string $name
      * @return bool
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return
             array_key_exists($name, $this->getDefaults()) ||
@@ -245,7 +252,7 @@ abstract class Record implements RecordInterface
      * @param array|ArrayAccess $init Initial record data
      * @return static
      */
-    public function make($init = []) {
+    public function make($init = []): self {
         $record = new static($this->_validator);
 
         foreach ($init as $key => $value) {
@@ -264,7 +271,7 @@ abstract class Record implements RecordInterface
      * @return static
      * @throws Exception
      */
-    public function merge($mergee) {
+    public function merge($mergee): self {
         $data = $this->_recordData;
         $fields = $this->getFields();
         $record = new static($this->_validator);
@@ -287,9 +294,9 @@ abstract class Record implements RecordInterface
      * @param Record $comparee
      * @return bool
      */
-    public function equals(Record $comparee)
+    public function equals(Record $comparee): bool
     {
-        return $this === $comparee || $this->toArray() == $comparee->toArray();
+        return $this === $comparee || $this->toArray() === $comparee->toArray();
     }
 
     /**

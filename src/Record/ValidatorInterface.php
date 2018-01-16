@@ -5,6 +5,8 @@
  * @author Oskar Thornblad
  */
 
+declare(strict_types=1);
+
 namespace Prewk\Record;
 
 /**
@@ -19,5 +21,5 @@ interface ValidatorInterface
      * @param mixed $rule
      * @return bool
      */
-    public function validate($value, $rule);
+    public function validate($value, $rule): bool;
 }
