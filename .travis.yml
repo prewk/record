@@ -10,10 +10,10 @@ before_script:
     - mkdir -p build/logs
 
 script:
-  - ./bin/phpunit --coverage-clover build/logs/clover.xml
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_success:
-  - ./bin/coveralls -v
+  - ./vendor/bin/coveralls -v
 
 branches:
   only: master
