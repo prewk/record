@@ -9,10 +9,9 @@ declare(strict_types=1);
 
 namespace Prewk;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Prewk\Record\ValidatorInterface;
 use stdClass;
-use TestCase;
 
 class TestWithDefaultsRecord extends Record
 {
@@ -78,7 +77,7 @@ class MockValidator implements ValidatorInterface
     }
 }
 
-class RecordTest extends PHPUnit_Framework_TestCase
+class RecordTest extends TestCase
 {
     private $validator;
 
