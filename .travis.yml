@@ -1,16 +1,19 @@
 language: php
 php:
-    - 7.0
-    - 7.1
-    - 7.2
+  - '7.0'
+  - '7.1'
+
+install:
+  - travis_retry composer install --no-interaction
 
 before_script:
-    - composer selfupdate
-    - composer install --prefer-source
+    - mkdir -p build/logs
 
 script:
-    - mkdir -p build/logs
-    - phpunit -c phpunit.xml.dist
+  - ./bin/phpunit --coverage-clover build/logs/clover.xml
 
-after_script:
-    - travis_retry php vendor/bin/coveralls -v
+after_success:
+  - ./bin/coveralls -v
+
+branches:
+  only: master
