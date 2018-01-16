@@ -5,6 +5,8 @@
  * @author Oskar Thornblad
  */
 
+declare(strict_types=1);
+
 namespace Prewk\Record\Laravel;
 
 use Prewk\Record\ValidatorInterface;

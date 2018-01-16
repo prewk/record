@@ -17,14 +17,13 @@ Validatable records with an API inspired by [Immutable Record](http://facebook.g
 
 ````php
 <?php
-
 class FooRecord extends \Prewk\Record
 {
     /**
      * Get record fields
-     * @return array
+     * @return string[]
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         return ["foo", "bar", "baz"];
     }
@@ -33,7 +32,7 @@ class FooRecord extends \Prewk\Record
      * Get defaults
      * @return array
      */
-    protected function getDefaults()
+    protected function getDefaults(): array
     {
         return ["foo" => 123, "bar" => null, "baz" => 456];
     }
@@ -72,7 +71,7 @@ class MyValidator implements \Prewk\Record\ValidatorInterface
      * @param mixed $rule
      * @return bool
      */
-    public function validate($value, $rule)
+    public function validate($value, $rule): bool
     {
         switch ($rule) {
             case "numeric":
@@ -86,9 +85,9 @@ class FooRecord extends \Prewk\Record
 {
     /**
      * Get record fields
-     * @return array
+     * @return string[]
      */
-    protected function getFields()
+    protected function getFields(): array
     {
         return ["foo", "bar", "baz"];
     }
@@ -97,7 +96,7 @@ class FooRecord extends \Prewk\Record
      * Get defaults
      * @return array
      */
-    protected function getDefaults()
+    protected function getDefaults(): array
     {
         return ["foo" => 123, "bar" => null, "baz" => 456];
     }
@@ -106,7 +105,7 @@ class FooRecord extends \Prewk\Record
      * Get rules
      * @return array
      */
-    protected function getRules()
+    protected function getRules(): array
     {
         return ["foo" => "numeric"];
     }
@@ -129,12 +128,12 @@ $record2 = $fooRecord->make(["foo" => "Will throw exception"]);
 <?php
 class FooRecord extends \Prewk\Record\Laravel\Record
 {
-    protected function getFields()
+    protected function getFields(): array
     {
         return ["foo", "bar"];
     }
     
-    protected function getRules()
+    protected function getRules(): array
     {
         return ["foo" => "in:1,2,3", "bar" => "numeric"];
     }
@@ -178,3 +177,6 @@ $newRecord = $record->merge($record2);
 
 MIT
 
+## PHP 5
+
+Use `1.1` for PHP versions < 7.0.
