@@ -265,7 +265,7 @@ abstract class Record implements RecordInterface
      * @param $name
      * @return bool
      */
-    final public function __isset($name)
+    public function __isset($name)
     {
         if (!$this->has($name)) {
             return false;
