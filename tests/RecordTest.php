@@ -435,6 +435,17 @@ class RecordTest extends TestCase
         $this->assertFalse(isset($record->baz));
     }
 
+    public function test_that_coalescing_operator_works_as_intended()
+    {
+        $record = (new TestWithoutDefaultsRecord)->make([
+            "foo" => "foo",
+        ]);
+
+        $this->assertEquals("foo", $record->foo);
+        $this->assertEquals("default", $record->bar ?? "default");
+        $this->assertEquals("default", $record->baz ?? "default");
+    }
+
     public function test_that_empty_works_on_magic_getters()
     {
         $record = (new TestWithoutDefaultsRecord)->make([
