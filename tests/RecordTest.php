@@ -425,6 +425,14 @@ class RecordTest extends TestCase
         $this->assertTrue(isset($record->foo));
         $this->assertFalse(isset($record->bar));
         $this->assertTrue(isset($record->baz));
+
+        $record = (new TestWithoutDefaultsRecord)->make([
+            "foo" => "bar",
+        ]);
+
+        $this->assertTrue(isset($record->foo));
+        $this->assertFalse(isset($record->bar));
+        $this->assertFalse(isset($record->baz));
     }
 
     public function test_that_empty_works_on_magic_getters()
