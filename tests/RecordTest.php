@@ -406,4 +406,51 @@ class RecordTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(["foo", "bar", "baz"], $keys);
         $this->assertEquals([123, null, 456], $values);
     }
+
+    public function test_that_magic_getter_works()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        $this->assertEquals(123, $record->foo);
+        $this->assertEquals(null, $record->bar);
+        $this->assertEquals(456, $record->baz);
+    }
+
+    public function test_that_isset_works_on_magic_getters()
+    {
+        $record = new TestWithDefaultsRecord;
+
+        $this->assertTrue(isset($record->foo));
+        $this->assertFalse(isset($record->bar));
+        $this->assertTrue(isset($record->baz));
+    }
+
+    public function test_that_empty_works_on_magic_getters()
+    {
+        $record = (new TestWithoutDefaultsRecord)->make([
+            "foo" => [],
+            "bar" => [1, 2, 3],
+            "baz" => null,
+        ]);
+
+        $this->assertTrue(empty($record->foo));
+        $this->assertFalse(empty($record->bar));
+        $this->assertTrue(empty($record->baz));
+
+        $record = $record->merge([
+            "foo" => 0,
+            "bar" => 1,
+            "baz" => "",
+        ]);
+
+        $this->assertTrue(empty($record->foo));
+        $this->assertFalse(empty($record->bar));
+        $this->assertTrue(empty($record->baz));
+
+        $record = $record->merge([
+            "foo" => "test",
+        ]);
+
+        $this->assertFalse(empty($record->foo));
+    }
 }

@@ -258,6 +258,25 @@ abstract class Record implements RecordInterface
     }
 
     /**
+     * Running isset($record->field) should:
+     * - Return false if the field isn't set
+     * - Return isset($value) if the field is set
+     *
+     * @param $name
+     * @return bool
+     */
+    final public function __isset($name)
+    {
+        if (!$this->has($name)) {
+            return false;
+        }
+
+        $value = $this->get($name);
+
+        return isset($value);
+    }
+
+    /**
      * Merge the record with another structure
      *
      * @param mixed $mergee
